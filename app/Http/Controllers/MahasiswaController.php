@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Models\Kelas;
@@ -23,7 +24,7 @@ class MahasiswaController extends Controller
                 }
             }]
         ])
-        >orderBy("Nim", "asc")
+        ->orderBy("Nim", "asc")
             ->paginate(5); // Mengambil semua isi tabel
         $mahasiswas = Mahasiswa::with('kelas')->paginate(3);
         $paginate = Mahasiswa::orderBy('Nim', 'asc')->paginate(3);
@@ -37,8 +38,9 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        //
         return view('mahasiswas.create');
+        $kelas = Kelas::all();
+        return view('mahasiswas.create', ['kelas' => $kelas]);
     }
 
     /**
@@ -49,22 +51,20 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
         //melakukan validasi data
-         $request->validate([
-        'Nim' => 'required',
-        'Nama' => 'required',
-        'Kelas' => 'required',
-        'Jurusan' => 'required',
-        'No_Handphone' => 'required',
-        ]);
+            $request->validate([
+                'Nim' => 'required',
+                'Nama' => 'required',
+                'Kelas' => 'required',
+                'Jurusan' => 'required',
+                'No_Handphone' => 'required',
+                ]);
+                //fungsi eloquent untuk menambah data
+                Mahasiswa::create($request->all());
 
-        //fungsi eloquent untuk menambah data
-        Mahasiswa::create($request->all());
-
-        //jika data berhasil ditambahkan, akan kembali ke halaman utama
-        return redirect()->route('mahasiswas.index')
-        ->with('success', 'Mahasiswa Berhasil Ditambahkan');
+                //jika data berhasil ditambahkan, akan kembali ke halaman utama
+                return redirect()->route('mahasiswas.index')
+                ->with('success', 'Mahasiswa Berhasil Ditambahkan');
     }
 
     /**
@@ -75,7 +75,6 @@ class MahasiswaController extends Controller
      */
     public function show($Nim)
     {
-        //
         //menampilkan detail data dengan menemukan/berdasarkan Nim Mahasiswa
         $Mahasiswa = Mahasiswa::find($Nim);
         return view('mahasiswas.detail', compact('Mahasiswa'));
@@ -89,7 +88,6 @@ class MahasiswaController extends Controller
      */
     public function edit($Nim)
     {
-        //
         //menampilkan detail data dengan menemukan berdasarkan Nim Mahasiswa untuk diedit
         $Mahasiswa = Mahasiswa::find($Nim);
         return view('mahasiswas.edit', compact('Mahasiswa'));
@@ -104,7 +102,6 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, $Nim)
     {
-        //
         //melakukan validasi data
         $request->validate([
             'Nim' => 'required',
@@ -130,10 +127,9 @@ class MahasiswaController extends Controller
      */
     public function destroy($Nim)
     {
-        //
         //fungsi eloquent untuk menghapus data
-        Mahasiswa::find($Nim)->delete();
-        return redirect()->route('mahasiswas.index')
+            Mahasiswa::find($Nim)->delete();
+            return redirect()->route('mahasiswas.index')
             -> with('success', 'Mahasiswa Berhasil Dihapus');
     }
 }
