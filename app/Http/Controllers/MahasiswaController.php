@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use App\Models\Kelas;
 
 class MahasiswaController extends Controller
 {
@@ -13,7 +14,6 @@ class MahasiswaController extends Controller
      */
     public function index(Request $request)
     {
-        //
         //fungsi eloquent menampilkan data menggunakan pagination
         $mahasiswas = Mahasiswa::where([
             ['Nama', '!=', Null],
@@ -22,13 +22,12 @@ class MahasiswaController extends Controller
                     $query->orWhere('Nama', 'LIKE', '%' . $term . '%')->get();
                 }
             }]
-
         ])
-        ->orderBy("Nim", "asc")
+        >orderBy("Nim", "asc")
             ->paginate(5); // Mengambil semua isi tabel
-        $posts = Mahasiswa::orderBy('Nim', 'desc')->paginate(6);
-        return view('mahasiswas.index', compact('mahasiswas'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        $mahasiswas = Mahasiswa::with('kelas')->paginate(3);
+        $paginate = Mahasiswa::orderBy('Nim', 'asc')->paginate(3);
+        return view('mahasiswas.index', ['mahasiswas' => $mahasiswas, 'paginate' => $paginate]);
     }
 
     /**
