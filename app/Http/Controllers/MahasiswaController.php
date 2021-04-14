@@ -38,9 +38,9 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('mahasiswas.create');
+        
         $kelas = Kelas::all();
-        return view('mahasiswas.create', ['kelas' => $kelas]);
+        return view('mahasiswas.create', compact('kelas'));
     }
 
     /**
@@ -52,19 +52,38 @@ class MahasiswaController extends Controller
     public function store(Request $request)
     {
         //melakukan validasi data
-            $request->validate([
-                'Nim' => 'required',
-                'Nama' => 'required',
-                'Kelas' => 'required',
-                'Jurusan' => 'required',
-                'No_Handphone' => 'required',
-                ]);
-                //fungsi eloquent untuk menambah data
-                Mahasiswa::create($request->all());
+        $request->validate([
+            'Nim' => 'required',
+            'Nama' => 'required',
+            'Kelas' => 'required',
+            'Jurusan' => 'required',
+            'No_Handphone' => 'required',
+            'Email' => 'required',
+            'TanggalLahir' => 'required',
+            ]);
+            //fungsi eloquent untuk menambah data
+            $mahasiswa = new Mahasiswa;
+            $mahasiswa->nim = $request->get('Nim');
+            $mahasiswa->nama = $request->get('Nama');
+            $mahasiswa->kelas_id = $request->get('Kelas');
+            $mahasiswa->jurusan = $request->get('Jurusan');
+            $mahasiswa->no_handphone = $request->get('No_Handphone');
+            $mahasiswa->email = $request->get('Email');
+            $mahasiswa->tanggalLahir = $request->get('TanggalLahir');
+            $mahasiswa->save();
 
-                //jika data berhasil ditambahkan, akan kembali ke halaman utama
-                return redirect()->route('mahasiswas.index')
-                ->with('success', 'Mahasiswa Berhasil Ditambahkan');
+            $kelas = new Kelas;
+            $kelas->id = $request->get('Kelas');
+
+            //fungsi eloquent untuk menambah data dengan relasi belongsTo
+
+            $mahasiswa->kelas()->associate($kelas);
+            $mahasiswa->save();
+
+
+            //jika data berhasil ditambahkan, akan kembali ke halaman utama
+            return redirect()->route('mahasiswas.index')
+            ->with('success', 'Mahasiswa Berhasil Ditambahkan');
     }
 
     /**
