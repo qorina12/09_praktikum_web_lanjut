@@ -17,19 +17,15 @@ class MahasiswaController extends Controller
     public function index(Request $request)
     {
         //fungsi eloquent menampilkan data menggunakan pagination
-        $mahasiswas = Mahasiswa::where([
-            ['Nama', '!=', Null],
-            [function ($query) use ($request) {
-                if (($term = $request->term)) {
-                    $query->orWhere('Nama', 'LIKE', '%' . $term . '%')->get();
-                }
-            }]
-        ])
-        ->orderBy("Nim", "asc")
-            ->paginate(5); // Mengambil semua isi tabel
-        $mahasiswas = Mahasiswa::with('kelas')->paginate(3);
-        $paginate = Mahasiswa::orderBy('Nim', 'asc')->paginate(3);
-        return view('mahasiswas.index', ['mahasiswas' => $mahasiswas, 'paginate' => $paginate]);
+        if($request->has('search')){
+            $mahasiswas = Mahasiswa::where('Nama', 'like', "%".$request->search."%")
+                ->orWhere('Nim', $request->search)
+                ->paginate(5);
+        } else {
+            // fungsi eloquent menampilkan data menggunakan pagination
+            $mahasiswas = Mahasiswa::paginate(5);
+        }
+        return view('mahasiswas.index', compact('mahasiswas'));
     }
 
     /**

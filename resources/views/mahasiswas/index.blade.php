@@ -12,17 +12,15 @@
         </div>
     </div>
     <div>
-    <div class="mx-auto pull-right">
-        <div class="">
-            <form action="{{ route('mahasiswas.index') }}" method="GET" role="search">
-
+    <div class="row justify-content-end">
+        <div class="col-md-4">
+            <form action="{{ route('mahasiswas.index') }}" accept-charset="UTF-8" method="get">
                 <div class="input-group">
-                    <span class="input-group-btn mr-5 mt-1">
-                        <button class="btn btn-info" type="submit" value="Cari" title="Search mahasiswa">Cari</button>
-                            <span class="fas fa-search"></span>
-                        </button>
+                    <input type="text" name="search" id="search" placeholder="Cari" class="form-control">
+                    <span class="input-group-btn">
+                        <input type="submit" value="Cari" class="btn btn-primary">
                     </span>
-                    <input type="text" class="form-control mr-2" name="term" placeholder="Search nama" id="term">
+                    &emsp;
                     <a href="{{ route('mahasiswas.index') }}" class=" mt-1">
                         <span class="input-group-btn">
                             <button class="btn btn-danger" type="button" title="Refresh page">Refresh</button>
@@ -34,8 +32,7 @@
             </form>
         </div>
     </div>
-    </div>
-
+    
     @if ($message = Session::get('success'))
     <div class="alert alert-success">
         <p>{{ $message }}</p>
