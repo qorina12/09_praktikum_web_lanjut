@@ -51,7 +51,7 @@
         <th>No_Handphone</th>
         <th>Email</th>
         <th>TanggalLahir</th>
-        <th width="280px">Action</th>
+        <th width="500px">Action</th>
     </tr>
     @foreach ($mahasiswas as $Mahasiswa)
     <tr>
@@ -70,6 +70,8 @@
             <a class="btn btn-primary" href="{{ route('mahasiswas.edit',$Mahasiswa->Nim) }}">Edit</a>
             @csrf @method('DELETE')
             <button type="submit" class="btn btn-danger">Delete</button>
+            <br><br>
+            <a class="btn btn-warning" href="{{ route('mahasiswas.showNilai', $Mahasiswa->Nim) }}">Nilai</a>
         </form>
          </td>
     </tr>
